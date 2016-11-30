@@ -12,4 +12,8 @@ class Renderer {
 
     int getRenderWidth() const;
     int getRenderHeight() const;
+
+ private:
+    int windowWidth;
+    int windowHeight;
 };

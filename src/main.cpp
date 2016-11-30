@@ -33,10 +33,13 @@ extern "C" int main(int argc, char *argv[]) {
     Uint32 windowID = SDL_GetWindowID(window);
 
     SDL_GLContext glctx = SDL_GL_CreateContext(window);
+
     if (!glctx) {
         fprintf(stderr, "SDL_GL_CreateContext: %s\n", SDL_GetError());
         exit(1);
     }
+
+    gl3wInit();
 
     Scene scene;
     scene.init();
