@@ -77,6 +77,9 @@ extern "C" int main(int argc, char *argv[]) {
                         }
                     }
                 }
+                if (ev.key.keysym.sym == SDLK_SPACE) {
+                    renderer->toggleWireFrame();
+                }
             }
         }
 
