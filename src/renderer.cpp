@@ -3,6 +3,9 @@
 #include <GL/gl3w.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 Renderer::~Renderer() {
@@ -120,14 +123,24 @@ void Renderer::paint() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(*defaultShader);
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, containerTexture);
     glUniform1i(glGetUniformLocation(*defaultShader, "ourTexture1"), 0);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, faceTexture);
     glUniform1i(glGetUniformLocation(*defaultShader, "ourTexture2"), 1);
+
+    glUseProgram(*defaultShader);
+
+    glm::mat4 transform;
+    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+    transform = glm::rotate(transform, (GLfloat)SDL_GetTicks() / 1000.0f *
+                                           glm::radians(50.0f),
+                            glm::vec3(0.0f, 0.0f, 1.0f));
+
+    // Get matrix's uniform location and set matrix
+    GLint transformLoc = glGetUniformLocation(*defaultShader, "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
     glBindVertexArray(vertexArray);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
