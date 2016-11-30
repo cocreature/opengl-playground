@@ -18,7 +18,7 @@ add_executable(opengl-playground
   src/gl3w.c
   src/renderer.cpp
   src/scene.cpp
-  src/shader.cpp
+  src/shaderset.cpp
   )
 
 target_link_libraries(opengl-playground

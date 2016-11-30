@@ -1,9 +1,8 @@
 #pragma once
 
-#include "shader.h"
-
 #include <GL/gl3w.h>
 #include <memory>
+#include <shaderset.h>
 
 class Scene;
 
@@ -25,5 +24,6 @@ class Renderer {
     GLuint vertexBuffer;
     GLuint elementBuffer;
     GLuint vertexArray;
-    Shader defaultShader;
+    ShaderSet shaderSet;
+    const GLuint *defaultShader;
 };

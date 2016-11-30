@@ -11,7 +11,11 @@ Renderer::~Renderer() {
 }
 
 void Renderer::init(Scene *scene) {
-    defaultShader = Shader("../shaders/default.vert", "../shaders/default.frag");
+    shaderSet.SetVersion("330");
+    shaderSet.SetPreamble("");
+
+    defaultShader = shaderSet.AddProgramFromExts(
+        {"../shaders/default.vert", "../shaders/default.frag"});
 
     GLfloat vertices[] = {
         // Positions         // Colors
@@ -48,6 +52,7 @@ void Renderer::resize(int width, int height) {
 }
 
 void Renderer::paint() {
+    shaderSet.UpdatePrograms();
     if (wireFrame) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     } else {
@@ -57,7 +62,7 @@ void Renderer::paint() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    defaultShader.use();
+    glUseProgram(*defaultShader);
     glBindVertexArray(vertexArray);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);
