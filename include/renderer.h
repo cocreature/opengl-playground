@@ -26,4 +26,5 @@ class Renderer {
     GLuint vertexArray;
     ShaderSet shaderSet;
     const GLuint *defaultShader;
+    GLuint texture;
 };
