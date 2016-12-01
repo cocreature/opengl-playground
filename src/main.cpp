@@ -63,21 +63,6 @@ int main(int argc, char *argv[]) {
                         renderer.resize(ev.window.data1, ev.window.data2);
                     }
                 }
-            } else if (ev.type == SDL_KEYDOWN) {
-                if (ev.key.keysym.sym == SDLK_RETURN) {
-                    if (ev.key.keysym.mod & KMOD_ALT) {
-                        Uint32 wflags = SDL_GetWindowFlags(window);
-                        if (wflags & SDL_WINDOW_FULLSCREEN_DESKTOP) {
-                            SDL_SetWindowFullscreen(window, 0);
-                        } else {
-                            SDL_SetWindowFullscreen(
-                                window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-                        }
-                    }
-                }
-                if (ev.key.keysym.sym == SDLK_SPACE) {
-                    renderer.toggleWireFrame();
-                }
             }
             simulation.handleEvent(ev);
         }

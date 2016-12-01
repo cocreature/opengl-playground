@@ -152,12 +152,11 @@ void Renderer::paint() {
 
     // Camera/View transformation
     glm::mat4 view =
-        glm::lookAt(scene->camera.cameraPos,
-                    scene->camera.cameraPos + scene->camera.cameraFront,
-                    scene->camera.cameraUp);
+        glm::lookAt(scene->camera.pos, scene->camera.pos + scene->camera.target,
+                    scene->camera.up);
     // Projection
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(scene->camera.fov),
+    projection = glm::perspective(glm::radians(75.0f),
                                   (GLfloat)windowWidth / (GLfloat)windowHeight,
                                   0.1f, 100.0f);
     // Get the uniform locations

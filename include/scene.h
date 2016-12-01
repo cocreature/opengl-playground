@@ -9,13 +9,13 @@
 #include <string>
 #include <vector>
 
-class Camera {
-  public:
-    glm::vec3 cameraPos;
-    glm::vec3 cameraFront;
-    glm::vec3 cameraUp;
-    GLfloat cameraSpeed;
-    GLfloat fov;
+struct Camera {
+    // View
+    glm::vec3 pos;
+    glm::vec3 target;
+    glm::vec3 up;
+
+    float aspect;
 };
 
 class Scene {

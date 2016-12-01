@@ -27,6 +27,7 @@ add_executable(opengl-playground
   src/scene.cpp
   src/shaderset.cpp
   src/simulation.cpp
+  src/flythrough_camera.cpp
   )
 
 target_link_libraries(opengl-playground

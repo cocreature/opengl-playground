@@ -21,7 +21,7 @@ class Simulation {
     // TODO these really belong somewhere else
     GLfloat pitch;
     GLfloat yaw;
-    GLfloat lastFrame;
+    Uint32 lastFrame;
     Scene &scene;
     Renderer &renderer;
     std::map<SDL_Keycode, bool> keys;

@@ -1,9 +1,7 @@
 #include "scene.h"
 
 void Scene::init() {
-    camera.cameraPos = {0.0f, 0.0f, 3.0f};
-    camera.cameraFront = {0.0f, 0.0f, -1.0f};
-    camera.cameraUp = {0.0f, 1.0f, 0.0f};
-    camera.cameraSpeed = 5.0f;
-    camera.fov = 45.0f;
+    camera.pos = {0.0f, 0.0f, 3.0f};
+    camera.target = {0.0f, 0.0f, -1.0f};
+    camera.up = {0.0f, 1.0f, 0.0f};
 }
