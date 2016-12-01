@@ -26,6 +26,7 @@ add_executable(opengl-playground
   src/renderer.cpp
   src/scene.cpp
   src/shaderset.cpp
+  src/simulation.cpp
   )
 
 target_link_libraries(opengl-playground

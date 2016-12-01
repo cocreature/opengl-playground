@@ -6,8 +6,9 @@
 
 #include "renderer.h"
 #include "scene.h"
+#include "simulation.h"
 
-extern "C" int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     if (SDL_Init(SDL_INIT_VIDEO)) {
         fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
         exit(1);
@@ -24,6 +25,7 @@ extern "C" int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    SDL_SetRelativeMouseMode(SDL_TRUE);
     Uint32 windowID = SDL_GetWindowID(window);
 
     SDL_GLContext glctx = SDL_GL_CreateContext(window);
@@ -38,14 +40,16 @@ extern "C" int main(int argc, char *argv[]) {
     Scene scene;
     scene.init();
 
-    std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>();
-    renderer->init(&scene);
+    Renderer renderer;
+    renderer.init(&scene);
+
+    Simulation simulation(scene, renderer);
 
     // Initial resize
     {
         int initialWidth, initialHeight;
         SDL_GL_GetDrawableSize(window, &initialWidth, &initialHeight);
-        renderer->resize(initialWidth, initialHeight);
+        renderer.resize(initialWidth, initialHeight);
     }
 
     while (true) {
@@ -56,7 +60,7 @@ extern "C" int main(int argc, char *argv[]) {
             } else if (ev.type == SDL_WINDOWEVENT) {
                 if (ev.window.windowID == windowID) {
                     if (ev.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-                        renderer->resize(ev.window.data1, ev.window.data2);
+                        renderer.resize(ev.window.data1, ev.window.data2);
                     }
                 }
             } else if (ev.type == SDL_KEYDOWN) {
@@ -72,32 +76,14 @@ extern "C" int main(int argc, char *argv[]) {
                     }
                 }
                 if (ev.key.keysym.sym == SDLK_SPACE) {
-                    renderer->toggleWireFrame();
-                }
-                if (ev.key.keysym.sym == SDLK_UP) {
-                    scene.camera.cameraPos +=
-                        scene.camera.cameraSpeed * scene.camera.cameraFront;
-                }
-                if (ev.key.keysym.sym == SDLK_DOWN) {
-                    scene.camera.cameraPos -=
-                        scene.camera.cameraSpeed * scene.camera.cameraFront;
-                }
-                if (ev.key.keysym.sym == SDLK_RIGHT) {
-                    scene.camera.cameraPos +=
-                        glm::normalize(glm::cross(scene.camera.cameraFront,
-                                                  scene.camera.cameraUp)) *
-                        scene.camera.cameraSpeed;
-                }
-                if (ev.key.keysym.sym == SDLK_LEFT) {
-                    scene.camera.cameraPos -=
-                        glm::normalize(glm::cross(scene.camera.cameraFront,
-                                                  scene.camera.cameraUp)) *
-                        scene.camera.cameraSpeed;
+                    renderer.toggleWireFrame();
                 }
             }
+            simulation.handleEvent(ev);
         }
 
-        renderer->paint();
+        simulation.update();
+        renderer.paint();
 
         SDL_GL_SwapWindow(window);
     }
