@@ -15,6 +15,7 @@ class Camera {
     glm::vec3 cameraFront;
     glm::vec3 cameraUp;
     GLfloat cameraSpeed;
+    GLfloat fov;
 };
 
 class Scene {

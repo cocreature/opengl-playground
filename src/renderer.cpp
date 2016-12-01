@@ -157,7 +157,7 @@ void Renderer::paint() {
                     scene->camera.cameraUp);
     // Projection
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f),
+    projection = glm::perspective(glm::radians(scene->camera.fov),
                                   (GLfloat)windowWidth / (GLfloat)windowHeight,
                                   0.1f, 100.0f);
     // Get the uniform locations

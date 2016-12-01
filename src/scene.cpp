@@ -5,4 +5,5 @@ void Scene::init() {
     camera.cameraFront = {0.0f, 0.0f, -1.0f};
     camera.cameraUp = {0.0f, 1.0f, 0.0f};
     camera.cameraSpeed = 5.0f;
+    camera.fov = 45.0f;
 }
