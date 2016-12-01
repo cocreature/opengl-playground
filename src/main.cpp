@@ -74,6 +74,26 @@ extern "C" int main(int argc, char *argv[]) {
                 if (ev.key.keysym.sym == SDLK_SPACE) {
                     renderer->toggleWireFrame();
                 }
+                if (ev.key.keysym.sym == SDLK_UP) {
+                    scene.camera.cameraPos +=
+                        scene.camera.cameraSpeed * scene.camera.cameraFront;
+                }
+                if (ev.key.keysym.sym == SDLK_DOWN) {
+                    scene.camera.cameraPos -=
+                        scene.camera.cameraSpeed * scene.camera.cameraFront;
+                }
+                if (ev.key.keysym.sym == SDLK_RIGHT) {
+                    scene.camera.cameraPos +=
+                        glm::normalize(glm::cross(scene.camera.cameraFront,
+                                                  scene.camera.cameraUp)) *
+                        scene.camera.cameraSpeed;
+                }
+                if (ev.key.keysym.sym == SDLK_LEFT) {
+                    scene.camera.cameraPos -=
+                        glm::normalize(glm::cross(scene.camera.cameraFront,
+                                                  scene.camera.cameraUp)) *
+                        scene.camera.cameraSpeed;
+                }
             }
         }
 

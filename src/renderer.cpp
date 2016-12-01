@@ -1,5 +1,7 @@
 #include "renderer.h"
 
+#include "scene.h"
+
 #include <GL/gl3w.h>
 #include <SDL.h>
 #include <SDL_image.h>
@@ -47,6 +49,8 @@ static GLfloat vertices[] = {
     -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
 
 void Renderer::init(Scene *scene) {
+    this->scene = scene;
+
     shaderSet.SetVersion("330");
     shaderSet.SetPreamble("");
 
@@ -147,13 +151,10 @@ void Renderer::paint() {
     glEnable(GL_DEPTH_TEST);
 
     // Camera/View transformation
-    glm::mat4 view;
-    GLfloat radius = 10.0f;
-    float time = SDL_GetTicks() / 1000.0;
-    GLfloat camX = sin(time) * radius;
-    GLfloat camZ = cos(time) * radius;
-    view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f),
-                       glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 view =
+        glm::lookAt(scene->camera.cameraPos,
+                    scene->camera.cameraPos + scene->camera.cameraFront,
+                    scene->camera.cameraUp);
     // Projection
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f),

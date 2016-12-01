@@ -18,6 +18,8 @@ class Renderer {
     void toggleWireFrame();
 
   private:
+    Scene *scene;
+
     bool wireFrame = false;
     int windowWidth;
     int windowHeight;

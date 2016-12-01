@@ -9,9 +9,17 @@
 #include <string>
 #include <vector>
 
+class Camera {
+  public:
+    glm::vec3 cameraPos;
+    glm::vec3 cameraFront;
+    glm::vec3 cameraUp;
+    GLfloat cameraSpeed;
+};
+
 class Scene {
   public:
-    uint32_t MainCameraID;
+    Camera camera;
 
     void init();
 };
