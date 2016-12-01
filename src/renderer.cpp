@@ -63,7 +63,6 @@ void Renderer::paint() {
 
     glBindVertexArray(vertexArray);
 
-    size_t i = 0;
     for (uint32_t instanceID : scene->instances) {
         const Instance &instance = scene->instances[instanceID];
         const Mesh &mesh = scene->meshes[instance.meshID];
@@ -76,13 +75,11 @@ void Renderer::paint() {
 
         glm::mat4 modelTransform;
         modelTransform = glm::translate(modelTransform, transform.translation);
-        modelTransform = glm::rotate(modelTransform, glm::radians(20.0f * i),
-                                     glm::vec3(1.0f, 0.3f, 0.5f));
+        modelTransform = modelTransform * mat4_cast(transform.rotation);
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, value_ptr(modelTransform));
 
         glBindVertexArray(mesh.MeshVAO);
         glDrawArrays(GL_TRIANGLES, 0, mesh.VertexCount);
-        ++i;
     }
 
     glBindVertexArray(0);
