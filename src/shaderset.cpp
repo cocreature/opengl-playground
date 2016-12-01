@@ -58,7 +58,6 @@ static uint64_t GetShaderFileTimestamp(const char *filename) {
 #else
     timestamp = fileStat.st_mtime;
 #endif
-
 #endif
 
     return timestamp;
@@ -108,8 +107,11 @@ GLuint *ShaderSet::AddProgram(
             mShaders.emplace(std::move(tmpShaderNameType), Shader{}).first;
         if (!foundShader->second.Handle) {
             foundShader->second.Handle = glCreateShader(shaderNameType.second);
+            // The sign bit is masked out, since some shader compilers treat the
+            // #line as signed, and others treat it unsigned.
             foundShader->second.HashName =
-                (int32_t)std::hash<std::string>()(shaderNameType.first);
+                (int32_t)std::hash<std::string>()(shaderNameType.first) &
+                0x7FFFFFFF;
         }
         shaderNameTypes.push_back(&foundShader->first);
     }
@@ -155,13 +157,13 @@ void ShaderSet::UpdatePrograms() {
         // which makes it possible to identify which file the error came from.
         std::string version = "#version " + mVersion + "\n";
 
-        std::string preamble_hash =
-            std::to_string((int32_t)std::hash<std::string>()("preamble"));
+        std::string preamble_hash = std::to_string(
+            (int32_t)std::hash<std::string>()("preamble") & 0x7FFFFFFF);
         std::string premable =
             "#line 1 " + preamble_hash + "\n" + mPreamble + "\n";
 
         std::string source_hash = std::to_string(shader->second.HashName);
-        std::string source = // n"#line 1 " + source_hash + "\n" +
+        std::string source = "#line 1 " + source_hash + "\n" +
                              ShaderStringFromFile(shader->first.Name.c_str()) +
                              "\n";
 
