@@ -1,10 +1,10 @@
 #pragma once
 
-#include "GL/gl3w.h"
+#include "packed_freelist.h"
 
+#include "GL/gl3w.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
-
 #include <map>
 #include <string>
 #include <vector>
@@ -18,14 +18,34 @@ struct Camera {
     float aspect;
 };
 
+struct Mesh {
+    GLuint MeshVAO;
+    GLuint PositionBO;
+    GLuint VertexCount;
+    uint32_t textureID;
+};
+
+struct Texture {
+    GLuint TexBO;
+};
+
+struct Transform {
+    glm::vec3 translation;
+    glm::quat rotation;
+};
+
+struct Instance {
+    uint32_t meshID;
+    uint32_t transformID;
+};
+
 class Scene {
   public:
     Camera camera;
+    packed_freelist<Mesh> meshes;
+    packed_freelist<Transform> transforms;
+    packed_freelist<Instance> instances;
+    packed_freelist<Texture> textures;
 
     void init();
 };
-
-void loadMeshes(Scene &scene, const std::string &filename,
-                std::vector<uint32_t> *loadedMeshIDs);
-
-void addInstance(Scene &scene, uint32_t meshID, uint32_t *newInstanceID);
