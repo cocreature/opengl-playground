@@ -179,11 +179,32 @@ int main() {
                     GL_NEAREST_MIPMAP_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
 
+    GLuint specularMap;
+    glGenTextures(1, &specularMap);
+    image = SOIL_load_image("../textures/container2_specular.png", &width,
+                            &height, 0, SOIL_LOAD_RGB);
+    assert(image != nullptr);
+    glBindTexture(GL_TEXTURE_2D, specularMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SOIL_free_image_data(image);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                    GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                    GL_NEAREST_MIPMAP_NEAREST);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
     lightingShader.Use();
 
     GLint matDiffuseLoc =
         glGetUniformLocation(lightingShader.Program, "material.diffuse");
     glUniform1i(matDiffuseLoc, 0);
+    GLint mattSpecularLoc =
+        glGetUniformLocation(lightingShader.Program, "material.specular");
+    glUniform1i(mattSpecularLoc, 1);
 
     // Game loop
     while (!glfwWindowShouldClose(window)) {
@@ -245,6 +266,8 @@ int main() {
         // Bind diffuse map
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseMap);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
 
         // Draw the container (using container's vertex attributes)
         glBindVertexArray(containerVAO);
