@@ -164,17 +164,47 @@ int main() {
 
         // Use cooresponding shader when setting uniforms/drawing objects
         lightingShader.Use();
-        GLint objectColorLoc =
-            glGetUniformLocation(lightingShader.Program, "objectColor");
-        GLint lightColorLoc =
-            glGetUniformLocation(lightingShader.Program, "lightColor");
+
+        GLint matAmbientLoc =
+            glGetUniformLocation(lightingShader.Program, "material.ambient");
+        GLint matDiffuseLoc =
+            glGetUniformLocation(lightingShader.Program, "material.diffuse");
+        GLint matSpecularLoc =
+            glGetUniformLocation(lightingShader.Program, "material.specular");
+        GLint matShineLoc =
+            glGetUniformLocation(lightingShader.Program, "material.shininess");
+
+        glUniform3f(matAmbientLoc, 1.0f, 0.5f, 0.31f);
+        glUniform3f(matDiffuseLoc, 1.0f, 0.5f, 0.31f);
+        glUniform3f(matSpecularLoc, 0.5f, 0.5f, 0.5f);
+        glUniform1f(matShineLoc, 32.0f);
+
+        GLint lightAmbientLoc =
+            glGetUniformLocation(lightingShader.Program, "light.ambient");
+        GLint lightDiffuseLoc =
+            glGetUniformLocation(lightingShader.Program, "light.diffuse");
+        GLint lightSpecularLoc =
+            glGetUniformLocation(lightingShader.Program, "light.specular");
         GLint lightPosLoc =
-            glGetUniformLocation(lightingShader.Program, "lightPos");
+            glGetUniformLocation(lightingShader.Program, "light.position");
+
+        glm::vec3 lightColor;
+        lightColor.x = sin(glfwGetTime() * 2.0f);
+        lightColor.y = sin(glfwGetTime() * 0.7f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);
+
+        glm::vec3 diffuseColor =
+            lightColor * glm::vec3(0.5f); // Decrease the influence
+        glm::vec3 ambientColor =
+            diffuseColor * glm::vec3(0.2f); // Low influence
+
+        glUniform3fv(lightAmbientLoc, 1, &ambientColor[0]);
+        glUniform3fv(lightDiffuseLoc, 1, &diffuseColor[0]);
+        glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
+        glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+
         GLint viewPosLoc =
             glGetUniformLocation(lightingShader.Program, "viewPos");
-        glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
-        glUniform3f(lightColorLoc, 1.0f, 0.5f, 1.0f);
-        glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
         glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y,
                     camera.Position.z);
 
