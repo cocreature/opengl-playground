@@ -225,12 +225,15 @@ int main() {
         lightingShader.Use();
         GLint lightPosLoc =
             glGetUniformLocation(lightingShader.Program, "light.position");
-        // GLint lightDirLoc =
-        //     glGetUniformLocation(lightingShader.Program, "light.direction");
+        GLint lightSpotDirLoc =
+            glGetUniformLocation(lightingShader.Program, "light.direction");
+        GLint lightSpotCutOffLoc =
+            glGetUniformLocation(lightingShader.Program, "light.cutOff");
         GLint viewPosLoc =
             glGetUniformLocation(lightingShader.Program, "viewPos");
-        glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
-        // glUniform3f(lightDirLoc, -0.2f, -1.0f, -0.3f);
+        glUniform3fv(lightPosLoc, 1, &camera.Position[0]);
+        glUniform3fv(lightSpotDirLoc, 1, &camera.Front[0]);
+        glUniform1f(lightSpotCutOffLoc, glm::cos(glm::radians(12.5f)));
         glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y,
                     camera.Position.z);
         // Set lights properties
@@ -304,8 +307,8 @@ int main() {
         // Get location objects for the matrices on the lamp shader (these could
         // be different on a different shader)
         modelLoc = glGetUniformLocation(lampShader.Program, "model");
-        viewLoc  = glGetUniformLocation(lampShader.Program, "view");
-        projLoc  = glGetUniformLocation(lampShader.Program, "projection");
+        viewLoc = glGetUniformLocation(lampShader.Program, "view");
+        projLoc = glGetUniformLocation(lampShader.Program, "projection");
         // Set matrices
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
